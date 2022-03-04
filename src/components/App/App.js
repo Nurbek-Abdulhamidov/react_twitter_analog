@@ -1,3 +1,4 @@
+import React from "react";
 import AppHeader from "../AppHeader";
 import PostAddForm from "../PostAddForm";
 import PostList from "../PostList/PostList";
@@ -5,24 +6,64 @@ import PostStatusFilter from "../PostStatusFilter";
 import SearchPanel from "../SearchPanel";
 import "./App.css";
 
-const App = () => {
-  let data = [
-    { label: "Going to office for work", important: true, id: "qw" },
-    { label: "That is so Good Idea ...", important: true, id: "qe"},
-    { label: "I have to read the book", important: true, id: "qa"},
-  ];
+export default class App extends React.Component {
+  constructor(props) {
+    super(props);
 
-  return (
-    <div className="app">
-      <AppHeader />
-      <div className="search-panel d-flex">
-        <SearchPanel />
-        <PostStatusFilter />
+    this.state = {
+      data: [
+        { label: "Going to office for work", important: false, id: 1 },
+        { label: "That is so Good Idea ...", important: false, id: 2},
+        { label: "I have to read the book", important: false, id: 3 },
+      ],
+    };
+    this.deleteItem = this.deleteItem.bind(this);
+    this.addItem = this.addItem.bind(this);
+
+    this.maxId = 4
+  }
+
+  deleteItem(id) {
+    this.setState(({ data }) => {
+      const index = data.findIndex((elem) => elem.id === id);
+
+      const before = data.slice(0, index);
+      const after = data.slice(index + 1);
+
+    
+      const newArr = [...before, ...after];
+
+      return {
+        data: newArr,
+      };
+    });
+  }
+
+  addItem(body) {
+    const newItem = {
+      label: body,
+      important: false,
+      id: this.maxId++,
+    };
+    this.setState(({ data }) => {
+      const newArr = [...data, newItem];
+      return {
+        data: newArr,
+      };
+    });
+  }
+
+  render() {
+    return (
+      <div className="app">
+        <AppHeader />
+        <div className="search-panel d-flex">
+          <SearchPanel />
+          <PostStatusFilter />
+        </div>
+        <PostList posts={this.state.data} onDelete={this.deleteItem} />
+        <PostAddForm onAdd={this.addItem} />
       </div>
-      <PostList posts={data} />
-      <PostAddForm />
-    </div>
-  );
-};
-
-export default App;
+    );
+  }
+}
