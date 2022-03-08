@@ -1,9 +1,9 @@
-import "./AppHeader.css"
-const AppHeader = () => {
+import "./AppHeader.css";
+const AppHeader = ({ liked, allPosts }) => {
   return (
     <div className="app-header d-flex">
       <h1>Nurbek</h1>
-      <h2>5 posts ,like 0</h2>
+      <h2>{allPosts} posts ,like {liked}</h2>
     </div>
   );
 };
